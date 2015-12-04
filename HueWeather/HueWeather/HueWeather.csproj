@@ -99,6 +99,7 @@
     <Compile Include="Hue\HueConnect.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\HueBridgeDetectionTests.cs" />
     <Compile Include="Webserver.cs" />
   </ItemGroup>
   <ItemGroup>
