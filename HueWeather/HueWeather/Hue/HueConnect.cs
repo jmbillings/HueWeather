@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace HueWeather.Hue
 {
-    internal class HueConnect
+    public sealed class HueConnect
     {
         private IBridgeLocator m_BridgeLocator;
         private IEnumerable<string> m_BridgeIPs;
         private readonly TimeSpan m_SearchTimeout = new TimeSpan(0,0,30);
 
-        internal async void FindBridge()
+        public async void FindBridge()
         {
             m_BridgeLocator = new SSDPBridgeLocator();
             m_BridgeIPs = await m_BridgeLocator.LocateBridgesAsync(m_SearchTimeout);
