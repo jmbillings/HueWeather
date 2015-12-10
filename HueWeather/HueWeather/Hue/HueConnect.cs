@@ -8,16 +8,34 @@ using System.Threading.Tasks;
 
 namespace HueWeather.Hue
 {
-    public sealed class HueConnect
+    internal class HueConnect
     {
         private IBridgeLocator m_BridgeLocator;
         private IEnumerable<string> m_BridgeIPs;
-        private readonly TimeSpan m_SearchTimeout = new TimeSpan(0,0,30);
 
-        public async void FindBridge()
+        internal delegate void BridgeLocatorEventHandler(object sender, LocateBridgeEventArgs e);
+        internal event BridgeLocatorEventHandler LocateBridgeComplete;
+
+        internal async void FindBridge()
         {
             m_BridgeLocator = new SSDPBridgeLocator();
-            m_BridgeIPs = await m_BridgeLocator.LocateBridgesAsync(m_SearchTimeout);
+            m_BridgeIPs = await m_BridgeLocator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
+            OnLocateBridgeComplete(new LocateBridgeEventArgs(m_BridgeIPs));
+        }
+
+        protected virtual void OnLocateBridgeComplete(LocateBridgeEventArgs e)
+        {
+            LocateBridgeComplete?.Invoke(this, e);
+        }
+    }
+
+    internal class LocateBridgeEventArgs : EventArgs
+    {
+        internal IEnumerable<string> m_BridgeIPs { get; set; }
+
+        internal LocateBridgeEventArgs(IEnumerable<string> BridgeIPs)
+        {
+            m_BridgeIPs = BridgeIPs;
         }
     }
 }
